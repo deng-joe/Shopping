@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 
-mongoose.connect('mongodb+srv://joey:joe123@project-shopping-rvwrn.mongodb.net/shopping?retryWrites=true', {useNewUrlParser: true}, function (err, res) {
+mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true}, function (err, res) {
     if (!err) {
         console.log('database connected successfully');
         return;
