@@ -38,6 +38,24 @@ router.get('/add-to-cart/:id', function (req, res, next) {
     });
 });
 
+router.get('/reduce/:id', function (req, res, next) {
+    var productId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
+
+    cart.reduceByOne(productId);
+    req.session.cart = cart;
+    res.redirect('/shoppingCart');
+});
+
+router.get('/remove/:id', function (req, res, next) {
+    var productId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
+
+    cart.removeItem(productId);
+    req.session.cart = cart;
+    res.redirect('/shoppingCart');
+});
+
 router.get('/shoppingCart', function (req, res, next) {
     if (!req.session.cart) {
         return res.render('shop/shoppingCart', {products: null});
