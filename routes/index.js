@@ -3,6 +3,7 @@ var router = express.Router();
 var Cart = require('../models/cart');
 
 var Product = require('../models/product');
+var Order = require('../models/order');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -37,6 +38,24 @@ router.get('/add-to-cart/:id', function (req, res, next) {
     });
 });
 
+router.get('/reduce/:id', function (req, res, next) {
+    var productId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
+
+    cart.reduceByOne(productId);
+    req.session.cart = cart;
+    res.redirect('/shoppingCart');
+});
+
+router.get('/remove/:id', function (req, res, next) {
+    var productId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
+
+    cart.removeItem(productId);
+    req.session.cart = cart;
+    res.redirect('/shoppingCart');
+});
+
 router.get('/shoppingCart', function (req, res, next) {
     if (!req.session.cart) {
         return res.render('shop/shoppingCart', {products: null});
@@ -45,7 +64,7 @@ router.get('/shoppingCart', function (req, res, next) {
     res.render('shop/shoppingCart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
 });
 
-router.get('/checkout', function (req, res, next) {
+router.get('/checkout', isLoggedIn, function (req, res, next) {
     if (!req.session.cart) {
         return res.redirect('/shoppingCart');
     }
@@ -54,7 +73,7 @@ router.get('/checkout', function (req, res, next) {
     res.render('shop/checkout', {total: cart.totalPrice, errMsg: errMsg, noError: !errMsg});
 });
 
-router.post('/checkout', function (req, res, next) {
+router.post('/checkout', isLoggedIn, function (req, res, next) {
     if (!req.session.cart) {
         return res.redirect('/shoppingCart');
     }
@@ -88,3 +107,11 @@ router.post('/checkout', function (req, res, next) {
 });
 
 module.exports = router;
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    req.session.oldUrl = req.url;
+    res.redirect('/user/signin');
+}
