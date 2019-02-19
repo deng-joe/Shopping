@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bcrypt-nodejs": "0.0.3",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^2.0.3",
@@ -19,6 +20,8 @@
     "hbs": "^4.0.2",
     "http-errors": "~1.6.2",
     "mongoose": "^5.4.11",
-    "mpesa-node": "^0.1.3"
+    "mpesa-node": "^0.1.3",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
   }
 }
