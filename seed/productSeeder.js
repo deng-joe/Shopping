@@ -1,13 +1,16 @@
 const Product = require('../models/product');
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true}, function (err, res) {
-    if (!err) {
-        console.log('database connected successfully');
-        return;
-    }
-    console.log(err);
-});
+//mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
+
+mongoose.connect('mongodb+srv://joey:Z7D5KrvcDWqbV7j@project-shopping-rvwrn.mongodb.net/shopping?retryWrites=true', {useNewUrlParser: true})
+    .then(item => {
+        console.log('Database connected successfully.')
+    })
+    .catch(err => {
+        console.error(err)
+    });
+
 
 const products = [
     new Product({
@@ -19,7 +22,7 @@ const products = [
     new Product({
         imagePath: 'http://eu.blizzard.com/static/_images/games/wow/wallpapers/wall2/wall2-1440x900.jpg',
         title: 'World of Warcraft Video Game',
-        description: 'Also awesome? But of course it was better in vanilla ...',
+        description: 'Also awesome? But of course it was better in vanilla!',
         price: 2000
     }),
     new Product({
@@ -45,6 +48,24 @@ const products = [
         title: 'FIFA 19',
         description: 'EA sports, it\'s in the game!!!',
         price: 8000
+    }),
+    new Product({
+        imagePath: 'https://i.ytimg.com/vi/4484xdymZOo/maxresdefault.jpg',
+        title: 'Need for Speed',
+        description: 'Speed is good, baby! Let\'s go for a ride!!!!!',
+        price: 4000
+    }),
+    new Product({
+        imagePath: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b1/Mortal_Kombat_Logo.svg/250px-Mortal_Kombat_Logo.svg.png',
+        title: 'Mortal Kombat X',
+        description: 'Fighting is an art. Be an artist today!!!!!',
+        price: 3500
+    }),
+    new Product({
+        imagePath: 'https://upload.wikimedia.org/wikipedia/en/6/62/Agent_47_in_Hitman_Absolution.png',
+        title: 'Hitman: Agent 47',
+        description: 'It\'s fun kicking some ass!!!!!',
+        price: 2800
     })
 ];
 
@@ -55,9 +76,12 @@ for (let i = 0; i < products.length; i++) {
         if (done === products.length) {
             exit();
         }
+        if (err) {
+            return console.error(err)
+        }
     });
 }
 
 function exit() {
-    mongoose.disconnect();
+    mongoose.disconnect()
 }

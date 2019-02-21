@@ -9,4 +9,4 @@ const schema = new Schema({
     paymentId: {type: String, required: true}
 });
 
-module.exports =  mongoose.model('Order', schema);
+module.exports = mongoose.model('Order', schema);

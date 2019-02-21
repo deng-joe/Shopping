@@ -80,32 +80,29 @@ router.post('/checkout', isLoggedIn, function (req, res, next) {
 
     const cart = new Cart(req.session.cart);
 
-    const axios = require('axios');
-    const mpesaRequest = {
-        amount: "50",
-        accountReference: "test",
-        callBackURL: "http://callback.url",
-        description: "test",
-        phoneNumber: "254718532419"
-    };
-    axios.post('https://safaricom-node-stk.herokuapp.com/api/v1/stkpush/process', mpesaRequest)
-        .then(result => {
-            console.log(result)
-        })
-        .catch(error => {
-            console.log(error.message)
+    const stripe = require("stripe")("sk_test_fwmVPdJfpkmwlQRedXec5IxR");
+    stripe.charges.create({
+        amount: cart.totalPrice * 100,
+        currency: "kes",
+        source: req.body.stripeToken, // obtained with Stripe.js
+        description: "Test Charge"
+    }, function (err, charge) {
+        if (err) {
+            req.flash('error', err.message);
+            return res.redirect('/checkout');
+        }
+        const order = new Order({
+            user: req.user,
+            cart: cart,
+            address: req.body.address,
+            name: req.body.name,
+            paymentId: charge.id
         });
-    const order = new Order({
-        user: req.user,
-        cart: cart,
-        address: req.body.address,
-        name: req.body.name,
-        paymentId: charge.id
-    });
-    order.save(function (err, result) {
-        req.flash('success', 'Successfully bought product(s)!');
-        req.session.cart = null;
-        res.redirect('/');
+        order.save(function (err, result) {
+            req.flash('success', 'Successfully bought product!');
+            req.session.cart = null;
+            res.redirect('/');
+        });
     });
 });
 

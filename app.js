@@ -1,8 +1,8 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cookieParser = require('cookie-parser');
 const expressHandlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -16,13 +16,15 @@ const userRouter = require('./routes/user');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true}, function (err, res) {
-    if (!err) {
-        console.log('database connected successfully');
-        return;
-    }
-    console.log(err);
-});
+//mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
+
+mongoose.connect('mongodb+srv://joey:Z7D5KrvcDWqbV7j@project-shopping-rvwrn.mongodb.net/shopping?retryWrites=true', {useNewUrlParser: true})
+    .then(item => {
+        console.log('Database connected successfully.')
+    })
+    .catch(err => {
+        console.error(err)
+    });
 
 require('./config/passport');
 
