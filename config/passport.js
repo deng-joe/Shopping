@@ -22,8 +22,8 @@ passport.use('local.signup', new LocalStrategy({
     const errors = req.validationErrors();
     if (errors) {
         const messages = [];
-        errors.forEach(function (err) {
-            messages.push(err.msg);
+        errors.forEach(function(error) {
+            messages.push(error.msg);
         });
         return done(null, false, req.flash('error', messages));
     }
@@ -32,7 +32,7 @@ passport.use('local.signup', new LocalStrategy({
             return done(err);
         }
         if (user) {
-            return done(null, false, {message: 'Email is already registered.'});
+            return done(null, false, {message: 'The email is already in use.'});
         }
         const newUser = new User();
         newUser.email = email;
@@ -42,7 +42,7 @@ passport.use('local.signup', new LocalStrategy({
                 return done(err);
             }
             return done(null, newUser);
-        })
+        });
     });
 }));
 
@@ -56,8 +56,8 @@ passport.use('local.signin', new LocalStrategy({
     const errors = req.validationErrors();
     if (errors) {
         const messages = [];
-        errors.forEach(function (err) {
-            messages.push(err.msg);
+        errors.forEach(function(error) {
+            messages.push(error.msg);
         });
         return done(null, false, req.flash('error', messages));
     }

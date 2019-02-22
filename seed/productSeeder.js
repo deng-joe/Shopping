@@ -1,16 +1,8 @@
 const Product = require('../models/product');
 
 const mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
 
-mongoose.connect('mongodb+srv://joey:Z7D5KrvcDWqbV7j@project-shopping-rvwrn.mongodb.net/shopping?retryWrites=true', {useNewUrlParser: true})
-    .then(item => {
-        console.log('Database connected successfully.')
-    })
-    .catch(err => {
-        console.error(err)
-    });
-
+mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
 
 const products = [
     new Product({
@@ -72,13 +64,15 @@ const products = [
 let done = 0;
 for (let i = 0; i < products.length; i++) {
     products[i].save(function (err, result) {
-        done++;
-        if (done === products.length) {
-            exit();
-        }
         if (err) {
             return console.error(err)
         }
+
+        done++;
+        if (done === products.length) {
+            exit()
+        }
+        console.log('Data saved.', result);
     });
 }
 

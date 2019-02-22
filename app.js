@@ -16,15 +16,7 @@ const userRouter = require('./routes/user');
 
 const app = express();
 
-//mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
-
-mongoose.connect('mongodb+srv://joey:Z7D5KrvcDWqbV7j@project-shopping-rvwrn.mongodb.net/shopping?retryWrites=true', {useNewUrlParser: true})
-    .then(item => {
-        console.log('Database connected successfully.')
-    })
-    .catch(err => {
-        console.error(err)
-    });
+mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
 
 require('./config/passport');
 

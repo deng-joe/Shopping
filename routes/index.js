@@ -5,6 +5,8 @@ const Cart = require('../models/cart');
 const Product = require('../models/product');
 const Order = require('../models/order');
 
+const axios = require('axios');
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     const successMsg = req.flash('success')[0];
@@ -80,30 +82,37 @@ router.post('/checkout', isLoggedIn, function (req, res, next) {
 
     const cart = new Cart(req.session.cart);
 
-    const stripe = require("stripe")("sk_test_fwmVPdJfpkmwlQRedXec5IxR");
-    stripe.charges.create({
-        amount: cart.totalPrice * 100,
-        currency: "kes",
-        source: req.body.stripeToken, // obtained with Stripe.js
-        description: "Test Charge"
-    }, function (err, charge) {
-        if (err) {
-            req.flash('error', err.message);
-            return res.redirect('/checkout');
-        }
-        const order = new Order({
-            user: req.user,
-            cart: cart,
-            address: req.body.address,
-            name: req.body.name,
-            paymentId: charge.id
-        });
-        order.save(function (err, result) {
-            req.flash('success', 'Successfully bought product!');
-            req.session.cart = null;
-            res.redirect('/');
-        });
-    });
+    const mpesaRequest = {
+        amount: '1',
+        accountReference: 'test',
+        callBackURL: 'http://callback.url',
+        description: 'test',
+        phoneNumber: '254715222623'
+    };
+    axios.post('https://safaricom-node-stk.herokuapp.com/api/v1/stkpush/process', mpesaRequest)
+        .then(result => {
+            console.log(result)
+        }, function (err, charge) {
+            if (err) {
+                req.flash('error', err.message);
+                return res.redirect('/checkout');
+            }
+            const order = new Order({
+                user: req.user,
+                cart: cart,
+                address: req.body.address,
+                name: req.body.name,
+                paymentId: charge.id
+            });
+            order.save(function (err, result) {
+                req.flash('success', 'Successfully bought product!');
+                req.session.cart = null;
+                res.redirect('/');
+            });
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
 });
 
 module.exports = router;
