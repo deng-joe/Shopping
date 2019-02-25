@@ -64,15 +64,10 @@ const products = [
 let done = 0;
 for (let i = 0; i < products.length; i++) {
     products[i].save(function (err, result) {
-        if (err) {
-            return console.error(err)
-        }
-
         done++;
         if (done === products.length) {
             exit()
         }
-        console.log('Data saved.', result);
     });
 }
 

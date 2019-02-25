@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <h1>User Profile</h1>
+        <h1>My Profile</h1>
         <hr>
         <h2>My Orders</h2>
         {{#each orders}}
@@ -10,7 +10,7 @@
                         {{# each this.items }}
                             <li class="list-group-item">
                                 <span class="badge">{{this.price}}</span>
-                                {{this.item.title}} | {{this.qty}} unit(s)
+                                {{this.item.title}} | {{this.qty}} item(s)
                             </li>
                         {{/each}}
                     </ul>

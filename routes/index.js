@@ -85,34 +85,29 @@ router.post('/checkout', isLoggedIn, function (req, res, next) {
     const mpesaRequest = {
         amount: '1',
         accountReference: 'test',
-        callBackURL: 'http://callback.url',
+        callbackUrl: 'http://callback.url',
         description: 'test',
-        phoneNumber: '254715222623'
+        phoneNumber: '254713153671'
     };
-    axios.post('https://safaricom-node-stk.herokuapp.com/api/v1/stkpush/process', mpesaRequest)
-        .then(result => {
-            console.log(result)
-        }, function (err, charge) {
-            if (err) {
-                req.flash('error', err.message);
-                return res.redirect('/checkout');
-            }
+    axios.post('https://safaricom-node-stk.herokuapp.com/api/v1/stkpush/process', mpesaRequest).then(
+        result => {
+            console.log(result);
             const order = new Order({
                 user: req.user,
                 cart: cart,
-                address: req.body.address,
-                name: req.body.name,
-                paymentId: charge.id
+                phone: mpesaRequest.phoneNumber
             });
             order.save(function (err, result) {
-                req.flash('success', 'Successfully bought product!');
+                req.flash('success', 'Transaction successful!');
                 req.session.cart = null;
                 res.redirect('/');
             });
-        })
-        .catch(error => {
-            console.log(error.message)
-        })
+        }
+    ).catch(err => {
+        console.error(err);
+        req.flash('error', err.message);
+        return res.redirect('/checkout');
+    });
 });
 
 module.exports = router;
