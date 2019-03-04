@@ -82,12 +82,13 @@ router.post('/checkout', isLoggedIn, function (req, res, next) {
 
     const cart = new Cart(req.session.cart);
 
+    let number = req.body;
     const mpesaRequest = {
         amount: '1',
         accountReference: 'test',
         callbackUrl: 'http://callback.url',
         description: 'test',
-        phoneNumber: '254713153671'
+        phoneNumber: number.phone
     };
     axios.post('https://safaricom-node-stk.herokuapp.com/api/v1/stkpush/process', mpesaRequest).then(
         result => {

@@ -22,7 +22,7 @@ passport.use('local.signup', new LocalStrategy({
     const errors = req.validationErrors();
     if (errors) {
         const messages = [];
-        errors.forEach(function(error) {
+        errors.forEach(function (error) {
             messages.push(error.msg);
         });
         return done(null, false, req.flash('error', messages));
@@ -56,7 +56,7 @@ passport.use('local.signin', new LocalStrategy({
     const errors = req.validationErrors();
     if (errors) {
         const messages = [];
-        errors.forEach(function(error) {
+        errors.forEach(function (error) {
             messages.push(error.msg);
         });
         return done(null, false, req.flash('error', messages));

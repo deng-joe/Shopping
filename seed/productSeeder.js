@@ -6,33 +6,33 @@ mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
 
 const products = [
     new Product({
-        imagePath: 'https://upload.wikimedia.org/wikipedia/en/5/5e/Gothiccover.png',
-        title: 'Gothic Video Game',
-        description: 'Awesome Game!!!!!',
+        imagePath: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f8/Injustice_Gods_Among_Us_Cover_Art.jpg/220px-Injustice_Gods_Among_Us_Cover_Art.jpg',
+        title: 'Injustice: Gods Among Us',
+        description: 'Awesome Game! It\'s all about immortality!!!!',
         price: 1000
     }),
     new Product({
         imagePath: 'http://eu.blizzard.com/static/_images/games/wow/wallpapers/wall2/wall2-1440x900.jpg',
-        title: 'World of Warcraft Video Game',
+        title: 'World of Warcraft',
         description: 'Also awesome? But of course it was better in vanilla!',
         price: 2000
     }),
     new Product({
-        imagePath: 'https://support.activision.com/servlet/servlet.FileDownload?file=00PU000000Rq6tz',
-        title: 'Call of Duty Video Game',
-        description: 'Meh ... nah, it\'s okay I guess',
+        imagePath: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/1c/Call_of_Duty_Black_Ops_4_official_box_art.jpg/220px-Call_of_Duty_Black_Ops_4_official_box_art.jpg',
+        title: 'Call of Duty: Black Ops 4',
+        description: 'Enjoyable shooter experience like never before!!!',
         price: 4000
     }),
     new Product({
-        imagePath: 'https://pmcdeadline2.files.wordpress.com/2014/02/minecraft__140227211000.jpg',
-        title: 'Minecraft Video Game',
-        description: 'Now that is super awesome!',
+        imagePath: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/Resident_Evil_2_Remake.jpg/220px-Resident_Evil_2_Remake.jpg',
+        title: 'Resident Evil 2',
+        description: 'Survival of the fittest, not fainthearted!',
         price: 1500
     }),
     new Product({
         imagePath: 'https://d1r7xvmnymv7kg.cloudfront.net/sites_products/darksouls3/assets/img/DARKSOUL_facebook_mini.jpg',
-        title: 'Dark Souls 3 Video Game',
-        description: 'I died!',
+        title: 'Dark Souls 3',
+        description: 'Become a hero and fight demons!',
         price: 5000
     }),
     new Product({
@@ -54,9 +54,9 @@ const products = [
         price: 3500
     }),
     new Product({
-        imagePath: 'https://upload.wikimedia.org/wikipedia/en/6/62/Agent_47_in_Hitman_Absolution.png',
+        imagePath: 'https://4.bp.blogspot.com/-qEE4Wmt1PrI/VstiOGuvd2I/AAAAAAAAAH4/WxPIMTHVVyA/s1600/Download-Hitman-Agent-47-Full-PC-Game%2B%25281%2529.jpg',
         title: 'Hitman: Agent 47',
-        description: 'It\'s fun kicking some ass!!!!!',
+        description: 'It\'s fun doing some shady missions!!!!!',
         price: 2800
     })
 ];
