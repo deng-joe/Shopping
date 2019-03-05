@@ -1,28 +1,22 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var expressHandlebars = require('express-handlebars');
-var mongoose = require('mongoose');
-var session = require('express-session');
-var passport = require('passport');
-var flash = require('connect-flash');
-var validator = require('express-validator');
-var MongoStore = require('connect-mongo')(session);
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const expressHandlebars = require('express-handlebars');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const flash = require('connect-flash');
+const validator = require('express-validator');
+const MongoStore = require('connect-mongo')(session);
 
-var indexRouter = require('./routes/index');
-var userRouter = require('./routes/user');
+const indexRouter = require('./routes/index');
+const userRouter = require('./routes/user');
 
-var app = express();
+const app = express();
 
-mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true}, function (err, res) {
-    if (!err) {
-        console.log('database connected successfully');
-        return;
-    }
-    console.log(err);
-});
+mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
 
 require('./config/passport');
 

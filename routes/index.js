@@ -1,17 +1,19 @@
-var express = require('express');
-var router = express.Router();
-var Cart = require('../models/cart');
+const express = require('express');
+const router = express.Router();
+const Cart = require('../models/cart');
 
-var Product = require('../models/product');
-var Order = require('../models/order');
+const Product = require('../models/product');
+const Order = require('../models/order');
+
+const axios = require('axios');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    var successMsg = req.flash('success')[0];
+    const successMsg = req.flash('success')[0];
     Product.find(function (err, docs) {
-        var productChunks = [];
-        var chunkSize = 3;
-        for (var i = 0; i < docs.length; i += chunkSize) {
+        const productChunks = [];
+        const chunkSize = 3;
+        for (let i = 0; i < docs.length; i += chunkSize) {
             productChunks.push(docs.slice(i, i + chunkSize));
         }
         res.render('shop/index', {
@@ -24,8 +26,8 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/add-to-cart/:id', function (req, res, next) {
-    var productId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
+    const productId = req.params.id;
+    const cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
 
     Product.findById(productId, function (err, product) {
         if (err) {
@@ -39,8 +41,8 @@ router.get('/add-to-cart/:id', function (req, res, next) {
 });
 
 router.get('/reduce/:id', function (req, res, next) {
-    var productId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
+    const productId = req.params.id;
+    const cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
 
     cart.reduceByOne(productId);
     req.session.cart = cart;
@@ -48,8 +50,8 @@ router.get('/reduce/:id', function (req, res, next) {
 });
 
 router.get('/remove/:id', function (req, res, next) {
-    var productId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
+    const productId = req.params.id;
+    const cart = new Cart(req.session.cart ? req.session.cart : {items: {}});
 
     cart.removeItem(productId);
     req.session.cart = cart;
@@ -60,7 +62,7 @@ router.get('/shoppingCart', function (req, res, next) {
     if (!req.session.cart) {
         return res.render('shop/shoppingCart', {products: null});
     }
-    var cart = new Cart(req.session.cart);
+    const cart = new Cart(req.session.cart);
     res.render('shop/shoppingCart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
 });
 
@@ -68,8 +70,8 @@ router.get('/checkout', isLoggedIn, function (req, res, next) {
     if (!req.session.cart) {
         return res.redirect('/shoppingCart');
     }
-    var cart = new Cart(req.session.cart);
-    var errMsg = req.flash('error')[0];
+    const cart = new Cart(req.session.cart);
+    const errMsg = req.flash('error')[0];
     res.render('shop/checkout', {total: cart.totalPrice, errMsg: errMsg, noError: !errMsg});
 });
 
@@ -77,32 +79,40 @@ router.post('/checkout', isLoggedIn, function (req, res, next) {
     if (!req.session.cart) {
         return res.redirect('/shoppingCart');
     }
-    var cart = new Cart(req.session.cart);
 
-    var stripe = require("stripe")("sk_test_fwmVPdJfpkmwlQRedXec5IxR");
+    const cart = new Cart(req.session.cart);
 
-    stripe.charges.create({
-        amount: cart.totalPrice * 100,
-        currency: "kes",
-        source: req.body.stripeToken, // obtained with Stripe.js
-        description: "Test Charge"
-    }, function (err, charge) {
-        if (err) {
-            req.flash('error', err.message);
-            return res.redirect('/checkout');
+    const number = req.body;
+    if (number.phone.length !== 12) {
+        req.flash('error', 'Invalid phone number!');
+        return res.redirect('/checkout');
+    }
+
+    const mpesaRequest = {
+        amount: '1',
+        accountReference: 'test',
+        callbackUrl: 'http://callback.url',
+        description: 'test',
+        phoneNumber: number.phone
+    };
+    axios.post('https://safaricom-node-stk.herokuapp.com/api/v1/stkpush/process', mpesaRequest).then(
+        result => {
+            console.log(result);
+            const order = new Order({
+                user: req.user,
+                cart: cart,
+                phone: mpesaRequest.phoneNumber
+            });
+            order.save(function (err, result) {
+                req.flash('success', 'Transaction successful!');
+                req.session.cart = null;
+                res.redirect('/');
+            });
         }
-        var order = new Order({
-            user: req.user,
-            cart: cart,
-            address: req.body.address,
-            name: req.body.name,
-            paymentId: charge.id
-        });
-        order.save(function (err, result) {
-            req.flash('success', 'Successfully bought product!');
-            req.session.cart = null;
-            res.redirect('/');
-        });
+    ).catch(err => {
+        console.error(err);
+        req.flash('error', err.message);
+        return res.redirect('/checkout');
     });
 });
 
