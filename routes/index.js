@@ -82,7 +82,12 @@ router.post('/checkout', isLoggedIn, function (req, res, next) {
 
     const cart = new Cart(req.session.cart);
 
-    let number = req.body;
+    const number = req.body;
+    if (number.phone.length !== 12) {
+        req.flash('error', 'Invalid phone number!');
+        return res.redirect('/checkout');
+    }
+
     const mpesaRequest = {
         amount: '1',
         accountReference: 'test',
