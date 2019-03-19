@@ -16,7 +16,7 @@ const userRouter = require('./routes/user');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost:27017/shopping', {useNewUrlParser: true, useCreateIndex: true});
 
 require('./config/passport');
 
