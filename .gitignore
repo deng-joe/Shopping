@@ -1,1 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
+.idea/
+node_modules/lodash.foreach/
+node_modules/lodash.get/
+node_modules/mongoose-unique-validator/
+public/images/
