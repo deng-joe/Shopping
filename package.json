@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@google/maps": "^0.5.5",
     "axios": "^0.18.0",
     "bcrypt-nodejs": "0.0.3",
     "connect-flash": "^0.1.1",
