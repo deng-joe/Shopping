@@ -95,7 +95,7 @@ router.post('/checkout', isLoggedIn, function (req, res, next) {
         description: 'test',
         phoneNumber: number.phone
     };
-    axios.post('https://safaricom-node-stk.herokuapp.com/api/v1/stkpush/process', mpesaRequest).then(
+    axios.post('https://node-stkpush-api.herokuapp.com/api/v1/stkpush/process', mpesaRequest).then(
         result => {
             console.log(result);
             const order = new Order({
